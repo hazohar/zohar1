@@ -1,291 +1,258 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>אתר חומשים — מנהל פרשנים</title>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0e1629;
-      --card:#16233d;
-      --accent:#fbbf24;
-      --border:#24385c;
-      --text:#f1f5f9;
-      --status-none: #7f8c8d; /* אפור */
-      --status-text: #3498db; /* כחול */
-      --status-proofread: #f39c12; /* כתום */
-      --status-edit: #e74c3c; /* אדום */
-      --status-review: #8e44ad; /* סגול */
-      --status-ready: #2ecc71; /* ירוק */
-    }
-    *{box-sizing:border-box;font-family:'Heebo',Arial,sans-serif}
-    body{margin:0;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
-    header{background:#111827;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-    h1{margin:0;font-size:22px}
-    /* שינוי: התאמת גודל הטורים */
-    main{flex:1;display:grid;grid-template-columns:250px 2fr 1fr;overflow:hidden;}
-    aside,section{overflow:auto}
-    .sidebar{background:var(--card);padding:12px;border-inline-end:1px solid var(--border)}
-    .main{padding:18px;overflow:auto;display:flex;flex-direction:column}
-    .panel{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
-    .right{background:var(--card);border-inline-start:1px solid var(--border);padding:16px;display:flex;flex-direction:column}
-    .chumash,.parsha{display:block;padding:8px 10px;border-radius:6px;color:inherit;text-decoration:none;margin-bottom:6px;cursor:pointer}
-    .chumash:hover,.parsha:hover{background:rgba(255,255,255,0.05)}
-    ul{list-style:none;padding:0;margin:0}
-    li{padding:8px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;border-radius:6px}
-    li:hover{background:rgba(255,255,255,0.05)}
-    .commentators ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      /* שינוי: סידור ב-4 עמודות */
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-    .commentators li {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px;
-    }
-    .commentators li > * {
-      margin-bottom: 5px;
-    }
-    /* שינוי: הכלל החדש להתאמת שם המפרש */
-    .commentators li > span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-      font-size: 14px;
-    }
-    .commentators li > span:is(.is-small-font) {
-      font-size: 11px;
-    }
-    .commentators li .buttons {
-      display: flex;
-      gap: 5px;
-    }
-    .status-label {
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-    button{background:var(--accent);border:none;padding:6px 10px;border-radius:6px;cursor:pointer;color:#000;font-weight:600}
-    .muted-btn{background:transparent;border:1px solid var(--border);color:var(--text)}
-    .delete-btn{background:#e74c3c;color:white}
-    .reset-btn{background:#e74c3c;color:white}
-    .back-btn{display:block;margin-bottom:10px}
-    textarea{width:100%;height:120px;background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;resize:vertical}
-    .top-actions{display:flex;gap:10px}
-    .content-card{
-        background:#0b1220;
-        border:1px solid var(--border);
-        border-radius:12px;
-        padding:12px;
-        margin-bottom:12px;
-        box-shadow:inset 0 0 8px rgba(0,0,0,0.3);
-        display: flex;
-        flex-direction: column;
-    }
-    .content-card h4{margin:0 0 6px;font-size:16px;color:var(--accent)}
-    .content-card p{margin:0;font-size:14px;line-height:1.4;white-space:pre-wrap}
-    .content-card-actions {
-        margin-top: 10px;
-        align-self: flex-end;
-        display: flex;
-        gap: 5px;
-    }
-    #editorArea{margin-bottom:16px}
-    .status-dropdown {
-      position: absolute;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      z-index: 100;
-      min-width: 150px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      top: 0;
-      right: 100%;
-    }
-    .status-dropdown button {
-      width: 100%;
-      text-align: right;
-      background: none;
-      border: none;
-      color: var(--text);
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-    }
-    .status-dropdown button:hover {
-      background: rgba(255,255,255,0.05);
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>אתר חומשים — מנהל פרשנים</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0e1629;
+      --card:#16233d;
+      --accent:#fbbf24;
+      --border:#24385c;
+      --text:#f1f5f9;
+      --status-none: #7f8c8d; /* אפור */
+      --status-text: #3498db; /* כחול */
+      --status-proofread: #f39c12; /* כתום */
+      --status-edit: #e74c3c; /* אדום */
+      --status-review: #8e44ad; /* סגול */
+      --status-ready: #2ecc71; /* ירוק */
+    }
+    *{box-sizing:border-box;font-family:'Heebo',Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
+    header{background:#111827;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+    h1{margin:0;font-size:22px}
+    /* שינוי: התאמת גודל הטורים */
+    main{flex:1;display:grid;grid-template-columns:250px 2fr 1fr;overflow:hidden;}
+    aside,section{overflow:auto}
+    .sidebar{background:var(--card);padding:12px;border-inline-end:1px solid var(--border)}
+    .main{padding:18px;overflow:auto;display:flex;flex-direction:column}
+    .panel{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+    .right{background:var(--card);border-inline-start:1px solid var(--border);padding:16px;display:flex;flex-direction:column}
+    .chumash,.parsha{display:block;padding:8px 10px;border-radius:6px;color:inherit;text-decoration:none;margin-bottom:6px;cursor:pointer}
+    .chumash:hover,.parsha:hover{background:rgba(255,255,255,0.05)}
+    ul{list-style:none;padding:0;margin:0}
+    li{padding:8px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;border-radius:6px}
+    li:hover{background:rgba(255,255,255,0.05)}
+    .commentators ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      /* שינוי: סידור ב-4 עמודות */
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .commentators li {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px;
+      position: relative; /* הוספה: עבור מיקום ה-dropdown */
+    }
+    .commentators li > * {
+      margin-bottom: 5px;
+    }
+    /* שינוי: הכלל החדש להתאמת שם המפרש */
+    .commentators li > span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      font-size: 14px;
+    }
+    .commentators li > span:is(.is-small-font) {
+      font-size: 11px;
+    }
+    .commentators li .buttons {
+      display: flex;
+      gap: 5px;
+      margin-top: auto;
+    }
+    .status-label {
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    button{background:var(--accent);border:none;padding:6px 10px;border-radius:6px;cursor:pointer;color:#000;font-weight:600}
+    .muted-btn{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .delete-btn{background:#e74c3c;color:white}
+    .reset-btn{background:#e74c3c;color:white}
+    .back-btn{display:block;margin-bottom:10px}
+    textarea{width:100%;height:120px;background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;resize:vertical}
+    .top-actions{display:flex;gap:10px}
+    .content-card{
+        background:#0b1220;
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:12px;
+        margin-bottom:12px;
+        box-shadow:inset 0 0 8px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+    }
+    .content-card h4{margin:0 0 6px;font-size:16px;color:var(--accent)}
+    .content-card p{margin:0;font-size:14px;line-height:1.4;white-space:pre-wrap}
+    .content-card-actions {
+        margin-top: 10px;
+        align-self: flex-end;
+        display: flex;
+        gap: 5px;
+    }
+    #editorArea{margin-bottom:16px}
+    .status-dropdown {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      z-index: 100;
+      min-width: 150px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      top: 0;
+      right: 100%;
+    }
+    .status-dropdown button {
+      width: 100%;
+      text-align: right;
+      background: none;
+      border: none;
+      color: var(--text);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .status-dropdown button:hover {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>חמשת חומשי תורה — מנהל פרשנים</h1>
-    <div class="top-actions">
-      <button id="exportAll">ייצא/הורד</button>
-      <button class="muted-btn" id="importBtn">טעינה</button>
-      <button class="reset-btn" id="resetAll">איפוס הכל</button>
-      <input type="file" id="importFile" accept="application/json" style="display:none">
-    </div>
-  </header>
-  <main>
-    <aside class="sidebar">
-      <h3 id="sidebarTitle">חומשים</h3>
-      <nav id="navList"></nav>
-    </aside>
-    <section class="main">
-      <div id="editorArea" class="panel" style="display:none;flex-direction:column">
-        <label>מפרש: <strong id="editorCommentator"></strong></label>
-        <textarea id="editorText" placeholder="כתוב כאן..."></textarea>
-        <div style="margin-top:8px;display:flex;gap:8px">
-          <button id="saveBtn">שמור</button>
-          <button class="muted-btn" id="clearBtn">נקה</button>
-        </div>
-      </div>
-      <div id="savedContent" class="panel"><h3>תוכן שמור</h3><div id="contentDisplay"></div></div>
-    </section>
-    <aside class="right">
-      <div>
-        <h3 id="sideTitle">פרשה ומפרש</h3>
-        <div id="commentatorList" class="commentators"></div>
-      </div>
-    </aside>
-  </main>
-  <script>
-    const CHUMASHIM = [
-      { key: 'bereishit', title: 'בראשית', parshiot: ['בראשית', 'נח', 'לך לך', 'וירא', 'חיי שרה', 'תולדות', 'ויצא', 'וישלח', 'וישב', 'מקץ', 'ויגש', 'ויחי'] },
-      { key: 'shemot', title: 'שמות', parshiot: ['שמות', 'וארא', 'בא', 'בשלח', 'יתרו', 'משפטים', 'תרומה', 'תצוה', 'כי תשא', 'ויקהל', 'פקודי'] },
-      { key: 'vayikra', title: 'ויקרא', parshiot: ['ויקרא', 'צו', 'שמיני', 'תזריע', 'מצורע', 'אחרי מות', 'קדושים', 'אמור', 'בהר', 'בחוקותי'] },
-      { key: 'bamidbar', title: 'במדבר', parshiot: ['במדבר', 'בהעלתך', 'שלח', 'קרח', 'חוקת', 'בלק', 'פנחס', 'מטות', 'מסעי'] },
-      { key: 'devarim', title: 'דברים', parshiot: ['דברים', 'ואתחנן', 'עקב', 'ראה', 'שופטים', 'כי תצא', 'כי תבוא', 'נצבים', 'וילך', 'האזינו', 'וזאת הברכה'] }
-    ];
-    const COMMENTATORS = ['אור יקר', 'גליון מאור החמה', 'גליונות (ילקוט הערות)', 'הגהות הגר"א', 'הגהות רח"ו (לרח"ו האמיתי)', 'הגהות הרמ"ז', 'זוהר +ניקוד +שנו"ס', 'זוהר אור יקר', 'זוהר הרקיע', 'יהל אור', 'יודעי בינה', 'כתם פז', 'מסורת הזוהר', 'מקדש מלך', 'נזר ישראל', 'קרני אור', 'רא"ג מאור החמה', 'רח"ו מאור החמה', 'רמ"א', 'רמ"ז', 'רמ"ק', 'מאור החמה', 'רמד"ל', 'רממ משקלוב', 'שמן ששון', 'שער מאמרי רשב"י', 'שעת רצון', 'תורה אור'];
-    const STATUS_OPTIONS = [
-      { key: 'none', text: 'אין בכלל', color: 'var(--status-none)' },
-      { key: 'text', text: 'טקסט', color: 'var(--status-text)' },
-      { key: 'proofread', text: 'הגהה', color: 'var(--status-proofread)' },
-      { key: 'edit', text: 'עריכה', color: 'var(--status-edit)' },
-      { key: 'review', text: 'ביקורת', color: 'var(--status-review)' },
-      { key: 'ready', text: 'מוכן לעימוד', color: 'var(--status-ready)' }
-    ];
+  <header>
+    <h1>חמשת חומשי תורה — מנהל פרשנים</h1>
+    <div class="top-actions">
+      <button id="exportAll">ייצא/הורד</button>
+      <button class="muted-btn" id="importBtn">טעינה</button>
+      <button class="reset-btn" id="resetAll">איפוס הכל</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+    </div>
+  </header>
+  <main>
+    <aside class="sidebar">
+      <h3 id="sidebarTitle">חומשים</h3>
+      <nav id="navList"></nav>
+    </aside>
+    <section class="main">
+      <div id="editorArea" class="panel" style="display:none;flex-direction:column">
+        <label>מפרש: <strong id="editorCommentator"></strong></label>
+        <textarea id="editorText" placeholder="כתוב כאן..."></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button id="saveBtn">שמור</button>
+          <button class="muted-btn" id="clearBtn">נקה</button>
+        </div>
+      </div>
+      <div id="savedContent" class="panel"><h3>תוכן שמור</h3><div id="contentDisplay"></div></div>
+    </section>
+    <aside class="right">
+      <div>
+        <h3 id="sideTitle">פרשה ומפרש</h3>
+        <div id="commentatorList" class="commentators"></div>
+      </div>
+    </aside>
+  </main>
+  <script>
+    let DATA;
 
-    const navList = document.getElementById('navList');
-    const sidebarTitle = document.getElementById('sidebarTitle');
-    const commentatorListEl = document.getElementById('commentatorList');
-    const sideTitle = document.getElementById('sideTitle');
-    const editorArea = document.getElementById('editorArea');
-    const editorCommentator = document.getElementById('editorCommentator');
-    const editorText = document.getElementById('editorText');
-    const saveBtn = document.getElementById('saveBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const contentDisplay = document.getElementById('contentDisplay');
-    let current = { chumash: null, parsha: null, commentator: null };
+    const navList=document.getElementById('navList');
+    const sidebarTitle=document.getElementById('sidebarTitle');
+    const commentatorListEl=document.getElementById('commentatorList');
+    const sideTitle=document.getElementById('sideTitle');
+    const editorArea=document.getElementById('editorArea');
+    const editorCommentator=document.getElementById('editorCommentator');
+    const editorText=document.getElementById('editorText');
+    const saveBtn=document.getElementById('saveBtn');
+    const clearBtn=document.getElementById('clearBtn');
+    const contentDisplay=document.getElementById('contentDisplay');
+    let current={chumash:null,parsha:null,commentator:null};
 
-    // --- קוד חדש מתחיל כאן ---
-    function init() {
-      // בודק אם Local Storage ריק, אם כן - טוען מהקובץ החיצוני
-      if (Object.keys(localStorage).length === 0) {
-        loadDataFromJSON();
-      } else {
-        renderChumashList();
-      }
-    }
-
-    async function loadDataFromJSON() {
+    async function init(){
       try {
-        const response = await fetch('./DATA.json');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-
-        for (let key in data) {
-          localStorage.setItem(key, data[key]);
-        }
-
-        alert('נתונים נטענו בהצלחה מקובץ DATA.json');
+        const response = await fetch('DATA.json');
+        DATA = await response.json();
         renderChumashList();
       } catch (error) {
-        console.error('Failed to load data from JSON:', error);
-        alert('שגיאה בטעינת הקובץ החיצוני. טוען את הממשק ריק.');
-        renderChumashList();
+        console.error('Failed to load DATA.json:', error);
+        alert('שגיאה בטעינת הנתונים. ודא שקובץ DATA.json קיים ונכון.');
       }
     }
-    // --- קוד חדש מסתיים כאן ---
-
-    function renderChumashList() {
-      sidebarTitle.textContent = 'חומשים';
-      navList.innerHTML = '';
-      CHUMASHIM.forEach(c => {
-        let a = document.createElement('a');
-        a.className = 'chumash';
-        a.textContent = c.title;
-        a.onclick = e => { e.preventDefault(); openChumash(c) };
+    
+    function renderChumashList(){
+      sidebarTitle.textContent='חומשים';
+      navList.innerHTML='';
+      DATA.CHUMASHIM.forEach(c=>{
+        let a=document.createElement('a');
+        a.className='chumash';
+        a.textContent=c.title;
+        a.onclick=e=>{e.preventDefault();openChumash(c)};
         navList.appendChild(a);
       });
       renderContent(null, null);
     }
-    function openChumash(c) {
-      current.chumash = c.key; current.parsha = null;
-      sidebarTitle.textContent = c.title;
-      navList.innerHTML = '';
 
+    function openChumash(c){
+      current.chumash=c.key;current.parsha=null;
+      sidebarTitle.textContent=c.title;
+      navList.innerHTML='';
+      
       let backBtn = document.createElement('button');
       backBtn.textContent = 'חזרה לחומשים';
       backBtn.className = 'muted-btn back-btn';
       backBtn.onclick = renderChumashList;
       navList.appendChild(backBtn);
 
-      c.parshiot.forEach(p => {
-        let a = document.createElement('a');
-        a.className = 'parsha';
-        a.textContent = p;
-        a.onclick = e => { e.preventDefault(); openParsha(p) };
+      c.parshiot.forEach(p=>{
+        let a=document.createElement('a');
+        a.className='parsha';
+        a.textContent=p;
+        a.onclick=e=>{e.preventDefault();openParsha(p)};
         navList.appendChild(a);
       });
-      commentatorListEl.innerHTML = '';
-      sideTitle.textContent = 'בחר פרשה ומפרש';
-      editorArea.style.display = 'none';
+      commentatorListEl.innerHTML='';
+      sideTitle.textContent='בחר פרשה ומפרש';
+      editorArea.style.display='none';
       renderContent(null, null);
     }
-    function openParsha(p) {
-      current.parsha = p;
-      sideTitle.textContent = `פרשה: ${p}`;
-      commentatorListEl.innerHTML = '';
-      let ul = document.createElement('ul');
-      COMMENTATORS.forEach(n => {
-        let li = document.createElement('li');
-        let span = document.createElement('span');
-        span.textContent = n;
-
+    function openParsha(p){
+      current.parsha=p;
+      sideTitle.textContent=`פרשה: ${p}`;
+      commentatorListEl.innerHTML='';
+      let ul=document.createElement('ul');
+      DATA.COMMENTATORS.forEach(n=>{
+        let li=document.createElement('li');
+        let span=document.createElement('span');
+        span.textContent=n;
+        
         // הוספה של התנאי לגודל הגופן
         if (n.length > 20) {
-          span.classList.add('is-small-font');
+            span.classList.add('is-small-font');
         }
 
         let buttonsDiv = document.createElement('div');
         buttonsDiv.className = 'buttons';
 
-        let editBtn = document.createElement('button');
-        editBtn.textContent = 'ערוך';
-        editBtn.onclick = e => { e.stopPropagation(); openEditor(n) };
+        let editBtn=document.createElement('button');
+        editBtn.textContent='ערוך';
+        editBtn.onclick=e=>{e.stopPropagation();openEditor(n)};
 
-        let statusBtn = document.createElement('button');
-        statusBtn.textContent = 'בחר מצב';
-        statusBtn.onclick = e => { e.stopPropagation(); openStatusSelector(n, statusBtn) };
+        let statusBtn=document.createElement('button');
+        statusBtn.textContent='בחר מצב';
+        statusBtn.onclick=e=>{e.stopPropagation();openStatusSelector(n, statusBtn)};
 
         buttonsDiv.appendChild(editBtn);
         buttonsDiv.appendChild(statusBtn);
@@ -300,31 +267,25 @@
         loadAndDisplayStatus(current.chumash, current.parsha, n, statusDiv);
       });
       commentatorListEl.appendChild(ul);
-      editorArea.style.display = 'none';
+      editorArea.style.display='none';
       renderContent(current.chumash, current.parsha);
     }
-
+    
     function loadAndDisplayStatus(chumashKey, parshaName, commentatorName, element) {
       const statusKey = `torah::${chumashKey}::${parshaName}::${commentatorName}::status`;
       const savedStatusKey = localStorage.getItem(statusKey);
-      if (savedStatusKey) {
-        const status = STATUS_OPTIONS.find(s => s.key === savedStatusKey);
-        if (status) {
-          element.innerHTML = `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>`;
-        }
-      } else {
-        element.innerHTML = `<span class="status-label" style="background-color: var(--status-none);">${STATUS_OPTIONS[0].text}</span>`;
-      }
+      const status = DATA.STATUS_OPTIONS.find(s => s.key === savedStatusKey) || DATA.STATUS_OPTIONS[0];
+      element.innerHTML = `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>`;
     }
-
+    
     function openStatusSelector(commentator, button) {
       // מחיקת כל דרופדאון קיים
       document.querySelectorAll('.status-dropdown').forEach(d => d.remove());
 
       const dropdown = document.createElement('div');
       dropdown.className = 'status-dropdown';
-
-      STATUS_OPTIONS.forEach(status => {
+      
+      DATA.STATUS_OPTIONS.forEach(status => {
         const statusOptionBtn = document.createElement('button');
         statusOptionBtn.textContent = status.text;
         statusOptionBtn.onclick = (e) => {
@@ -334,7 +295,7 @@
         };
         dropdown.appendChild(statusOptionBtn);
       });
-
+      
       button.parentElement.style.position = 'relative';
       button.parentElement.appendChild(dropdown);
     }
@@ -345,38 +306,38 @@
       openParsha(current.parsha);
     }
 
-    function storageKey(c, p, n) { return `torah::${c}::${p}::${n}` }
-    function openEditor(n) {
-      if (!current.parsha) { alert('בחר פרשה'); return }
-      current.commentator = n;
-      editorCommentator.textContent = n;
-      editorArea.style.display = 'flex';
-      let k = storageKey(current.chumash, current.parsha, n);
-      editorText.value = localStorage.getItem(k) || '';
+    function storageKey(c,p,n){return `torah::${c}::${p}::${n}`}
+    function openEditor(n){
+      if(!current.parsha){alert('בחר פרשה');return}
+      current.commentator=n;
+      editorCommentator.textContent=n;
+      editorArea.style.display='flex';
+      let k=storageKey(current.chumash,current.parsha,n);
+      editorText.value=localStorage.getItem(k)||'';
     }
-    saveBtn.onclick = () => {
-      if (!current.commentator) return;
-      let k = storageKey(current.chumash, current.parsha, current.commentator);
-      localStorage.setItem(k, editorText.value);
+    saveBtn.onclick=()=>{
+      if(!current.commentator)return;
+      let k=storageKey(current.chumash,current.parsha,current.commentator);
+      localStorage.setItem(k,editorText.value);
       renderContent(current.chumash, current.parsha);
     };
-    clearBtn.onclick = () => {
-      if (!current.commentator) return;
-      if (!confirm('למחוק את התוכן?')) return;
-      let k = storageKey(current.chumash, current.parsha, current.commentator);
+    clearBtn.onclick=()=>{
+      if(!current.commentator)return;
+      if(!confirm('למחוק את התוכן?'))return;
+      let k=storageKey(current.chumash,current.parsha,current.commentator);
       localStorage.removeItem(k);
-      editorText.value = '';
+      editorText.value='';
       // עדכון סטטוס ל"אין בכלל" לאחר מחיקה
       saveStatus(current.commentator, 'none');
       renderContent(current.chumash, current.parsha);
     };
-
+    
     function deleteCommentator(chumash, parsha, commentator) {
-      if (!confirm(`האם אתה בטוח שברצונך למחוק את כל התוכן והסטטוס עבור ${commentator} בפרשת ${parsha}?`)) return;
-
+      if(!confirm(`האם אתה בטוח שברצונך למחוק את כל התוכן והסטטוס עבור ${commentator} בפרשת ${parsha}?`)) return;
+      
       const contentKey = `torah::${chumash}::${parsha}::${commentator}`;
       const statusKey = `${contentKey}::status`;
-
+      
       localStorage.removeItem(contentKey);
       localStorage.removeItem(statusKey);
 
@@ -384,48 +345,48 @@
       openParsha(current.parsha);
       alert('התוכן נמחק בהצלחה!');
     }
-
+    
     function resetAllData() {
       if (confirm('האם אתה בטוח לחלוטין שברצונך למחוק את כל הנתונים השמורים? פעולה זו היא בלתי הפיכה!')) {
         localStorage.clear();
-        current = { chumash: null, parsha: null, commentator: null };
+        current = {chumash: null, parsha: null, commentator: null};
         renderChumashList();
-        editorArea.style.display = 'none';
+        editorArea.style.display='none';
         alert('כל הנתונים נמחקו בהצלחה. האתר אופס.');
       }
     }
 
     document.getElementById('resetAll').onclick = resetAllData;
 
-    function renderContent(chumashKey, parshaName) {
-      contentDisplay.innerHTML = '';
+    function renderContent(chumashKey, parshaName){
+      contentDisplay.innerHTML='';
       // ריצה על כל המפתחות ב-localStorage
       const keys = Object.keys(localStorage);
       keys.forEach(k => {
-        if (k.startsWith('torah::') && !k.endsWith('::status')) {
-          let [_, ch, p, n] = k.split('::');
+        if(k.startsWith('torah::') && !k.endsWith('::status')){
+          let [_,ch,p,n]=k.split('::');
           if ((!chumashKey || ch === chumashKey) && (!parshaName || p === parshaName)) {
-            let v = localStorage.getItem(k);
-            if (v) {
-              let card = document.createElement('div');
-              card.className = 'content-card';
-
+            let v=localStorage.getItem(k);
+            if(v){
+              let card=document.createElement('div');
+              card.className='content-card';
+              
               const statusKey = `torah::${ch}::${p}::${n}::status`;
               const savedStatusKey = localStorage.getItem(statusKey) || 'none';
-              const status = STATUS_OPTIONS.find(s => s.key === savedStatusKey);
+              const status = DATA.STATUS_OPTIONS.find(s => s.key === savedStatusKey);
               const statusHtml = status ? `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>` : '';
 
-              card.innerHTML = `<h4>${ch} — ${p} — ${n} ${statusHtml}</h4><p>${v}</p>`;
-
+              card.innerHTML=`<h4>${ch} — ${p} — ${n} ${statusHtml}</h4><p>${v}</p>`;
+              
               let actionsDiv = document.createElement('div');
               actionsDiv.className = 'content-card-actions';
-
+              
               let editBtn = document.createElement('button');
               editBtn.textContent = 'ערוך';
               editBtn.onclick = () => {
-                current.chumash = ch;
-                current.parsha = p;
-                openEditor(n);
+                  current.chumash = ch;
+                  current.parsha = p;
+                  openEditor(n);
               };
 
               let deleteBtn = document.createElement('button');
@@ -438,45 +399,41 @@
               actionsDiv.appendChild(editBtn);
               actionsDiv.appendChild(deleteBtn);
               card.appendChild(actionsDiv);
-
+              
               contentDisplay.appendChild(card);
             }
           }
         }
       });
     }
-    document.getElementById('exportAll').onclick = () => {
-      let d = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        let k = localStorage.key(i);
-        if (k.startsWith('torah::')) d[k] = localStorage.getItem(k);
+    document.getElementById('exportAll').onclick=()=>{
+      let d={};
+      for(let i=0;i<localStorage.length;i++){
+        let k=localStorage.key(i);
+        if(k.startsWith('torah::'))d[k]=localStorage.getItem(k);
       }
-      let blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement('a');
-      a.href = url; a.download = 'torah-backup.json'; a.click(); URL.revokeObjectURL(url);
+      let blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+      let url=URL.createObjectURL(blob);
+      let a=document.createElement('a');
+      a.href=url;a.download='torah-backup.json';a.click();URL.revokeObjectURL(url);
     };
-    document.getElementById('importBtn').onclick = () => document.getElementById('importFile').click();
-    document.getElementById('importFile').onchange = function () {
-      let f = this.files[0]; if (!f) return;
-      let r = new FileReader();
-      r.onload = e => {
-        try {
-          let o = JSON.parse(e.target.result);
-          for (let k in o) { if (k.startsWith('torah::')) localStorage.setItem(k, o[k]) }
+    document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+    document.getElementById('importFile').onchange=function(){
+      let f=this.files[0];if(!f)return;
+      let r=new FileReader();
+      r.onload=e=>{
+        try{let o=JSON.parse(e.target.result);
+          for(let k in o){if(k.startsWith('torah::'))localStorage.setItem(k,o[k])}
           renderContent(current.chumash, current.parsha);
           if (current.parsha) {
             openParsha(current.parsha);
           } else {
             renderChumashList();
           }
-          alert('הייבוא הצליח')
-        }
-        catch { alert('קובץ לא תקין') }
-      };
-      r.readAsText(f, 'utf-8')
-    };
+          alert('הייבוא הצליח')}
+        catch{alert('קובץ לא תקין')}};
+      r.readAsText(f,'utf-8')};
     init();
-  </script>
+  </script>
 </body>
 </html>
