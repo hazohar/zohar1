@@ -1,3 +1,33 @@
+השיחה נפתחה. 2 הודעות. כבר קראת את כל ההודעות.
+
+דילוג לתוכן
+שימוש ב-Gmail עם קוראי מסך
+in:sent 
+
+7 מתוך 3,392
+13:37‏
+
+יצחק <neveyaakov@gmail.com‏>
+קבצים מצורפים
+13:37 ‎(לפני 4 שעות)‎
+מנחם
+
+
+ קובץ מצורף אחד
+  •  נסרקו על ידי Gmail
+
+מנחם זקס
+קבצים מצורפים
+13:43 ‎(לפני 4 שעות)‎
+אני
+
+תטעון את זה, ותראה איך זה
+
+‫בתאריך יום ג׳, 2 בספט׳ 2025 ב-13:38 מאת יצחק <‪neveyaakov@gmail.com‬‏>:‬
+
+
+ קובץ מצורף אחד
+  •  נסרקו על ידי Gmail
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
@@ -195,35 +225,8 @@
     let current={chumash:null,parsha:null,commentator:null};
 
     function init(){
-      // אם ה-Local Storage ריק, נסה לטעון את הנתונים מהקובץ החיצוני
-      if (Object.keys(localStorage).length === 0) {
-          loadDataFromJSON();
-      } else {
-          renderChumashList();
-      }
+      renderChumashList();
     }
-
-    async function loadDataFromJSON() {
-      try {
-          const response = await fetch('./DATA.json');
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          
-          for(let key in data) {
-              localStorage.setItem(key, data[key]);
-          }
-          
-          alert('נתונים נטענו בהצלחה מקובץ DATA.json');
-          renderChumashList();
-      } catch (error) {
-          console.error('Failed to load data from JSON:', error);
-          alert('שגיאה בטעינת הקובץ החיצוני. טוען את הממשק ריק.');
-          renderChumashList();
-      }
-    }
-    
     function renderChumashList(){
       sidebarTitle.textContent='חומשים';
       navList.innerHTML='';
@@ -474,3 +477,5 @@
   </script>
 </body>
 </html>
+מה יש.html
+מציג את מה יש.html.
