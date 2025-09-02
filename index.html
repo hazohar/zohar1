@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
@@ -41,7 +41,7 @@
       margin: 0;
       display: grid;
       /* שינוי: סידור ב-4 עמודות */
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
     .commentators li {
@@ -53,7 +53,6 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 8px;
-      position: relative; /* הוספה: עבור מיקום ה-dropdown */
     }
     .commentators li > * {
       margin-bottom: 5px;
@@ -72,7 +71,6 @@
     .commentators li .buttons {
       display: flex;
       gap: 5px;
-      margin-top: auto;
     }
     .status-label {
       font-size: 12px;
@@ -167,7 +165,22 @@
     </aside>
   </main>
   <script>
-    let DATA;
+    const CHUMASHIM=[
+      {key:'bereishit',title:'בראשית',parshiot:['בראשית','נח','לך לך','וירא','חיי שרה','תולדות','ויצא','וישלח','וישב','מקץ','ויגש','ויחי']},
+      {key:'shemot',title:'שמות',parshiot:['שמות','וארא','בא','בשלח','יתרו','משפטים','תרומה','תצוה','כי תשא','ויקהל','פקודי']},
+      {key:'vayikra',title:'ויקרא',parshiot:['ויקרא','צו','שמיני','תזריע','מצורע','אחרי מות','קדושים','אמור','בהר','בחוקותי']},
+      {key:'bamidbar',title:'במדבר',parshiot:['במדבר','בהעלתך','שלח','קרח','חוקת','בלק','פנחס','מטות','מסעי']},
+      {key:'devarim',title:'דברים',parshiot:['דברים','ואתחנן','עקב','ראה','שופטים','כי תצא','כי תבוא','נצבים','וילך','האזינו','וזאת הברכה']}
+    ];
+    const COMMENTATORS=['אור יקר','גליון מאור החמה','גליונות (ילקוט הערות)','הגהות הגר"א','הגהות רח"ו (לרח"ו האמיתי)','הגהות הרמ"ז','זוהר +ניקוד +שנו"ס','זוהר אור יקר','זוהר הרקיע','יהל אור','יודעי בינה','כתם פז','מסורת הזוהר','מקדש מלך','נזר ישראל','קרני אור','רא"ג מאור החמה','רח"ו מאור החמה','רמ"א','רמ"ז','רמ"ק','מאור החמה','רמד"ל','רממ משקלוב','שמן ששון','שער מאמרי רשב"י','שעת רצון','תורה אור'];
+    const STATUS_OPTIONS = [
+      { key: 'none', text: 'אין בכלל', color: 'var(--status-none)' },
+      { key: 'text', text: 'טקסט', color: 'var(--status-text)' },
+      { key: 'proofread', text: 'הגהה', color: 'var(--status-proofread)' },
+      { key: 'edit', text: 'עריכה', color: 'var(--status-edit)' },
+      { key: 'review', text: 'ביקורת', color: 'var(--status-review)' },
+      { key: 'ready', text: 'מוכן לעימוד', color: 'var(--status-ready)' }
+    ];
 
     const navList=document.getElementById('navList');
     const sidebarTitle=document.getElementById('sidebarTitle');
@@ -181,21 +194,13 @@
     const contentDisplay=document.getElementById('contentDisplay');
     let current={chumash:null,parsha:null,commentator:null};
 
-    async function init(){
-      try {
-        const response = await fetch('DATA.json');
-        DATA = await response.json();
-        renderChumashList();
-      } catch (error) {
-        console.error('Failed to load DATA.json:', error);
-        alert('שגיאה בטעינת הנתונים. ודא שקובץ DATA.json קיים ונכון.');
-      }
+    function init(){
+      renderChumashList();
     }
-    
     function renderChumashList(){
       sidebarTitle.textContent='חומשים';
       navList.innerHTML='';
-      DATA.CHUMASHIM.forEach(c=>{
+      CHUMASHIM.forEach(c=>{
         let a=document.createElement('a');
         a.className='chumash';
         a.textContent=c.title;
@@ -204,7 +209,6 @@
       });
       renderContent(null, null);
     }
-
     function openChumash(c){
       current.chumash=c.key;current.parsha=null;
       sidebarTitle.textContent=c.title;
@@ -233,7 +237,7 @@
       sideTitle.textContent=`פרשה: ${p}`;
       commentatorListEl.innerHTML='';
       let ul=document.createElement('ul');
-      DATA.COMMENTATORS.forEach(n=>{
+      COMMENTATORS.forEach(n=>{
         let li=document.createElement('li');
         let span=document.createElement('span');
         span.textContent=n;
@@ -274,8 +278,14 @@
     function loadAndDisplayStatus(chumashKey, parshaName, commentatorName, element) {
       const statusKey = `torah::${chumashKey}::${parshaName}::${commentatorName}::status`;
       const savedStatusKey = localStorage.getItem(statusKey);
-      const status = DATA.STATUS_OPTIONS.find(s => s.key === savedStatusKey) || DATA.STATUS_OPTIONS[0];
-      element.innerHTML = `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>`;
+      if (savedStatusKey) {
+        const status = STATUS_OPTIONS.find(s => s.key === savedStatusKey);
+        if (status) {
+          element.innerHTML = `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>`;
+        }
+      } else {
+        element.innerHTML = `<span class="status-label" style="background-color: var(--status-none);">${STATUS_OPTIONS[0].text}</span>`;
+      }
     }
     
     function openStatusSelector(commentator, button) {
@@ -285,7 +295,7 @@
       const dropdown = document.createElement('div');
       dropdown.className = 'status-dropdown';
       
-      DATA.STATUS_OPTIONS.forEach(status => {
+      STATUS_OPTIONS.forEach(status => {
         const statusOptionBtn = document.createElement('button');
         statusOptionBtn.textContent = status.text;
         statusOptionBtn.onclick = (e) => {
@@ -373,7 +383,7 @@
               
               const statusKey = `torah::${ch}::${p}::${n}::status`;
               const savedStatusKey = localStorage.getItem(statusKey) || 'none';
-              const status = DATA.STATUS_OPTIONS.find(s => s.key === savedStatusKey);
+              const status = STATUS_OPTIONS.find(s => s.key === savedStatusKey);
               const statusHtml = status ? `<span class="status-label" style="background-color: ${status.color};">${status.text}</span>` : '';
 
               card.innerHTML=`<h4>${ch} — ${p} — ${n} ${statusHtml}</h4><p>${v}</p>`;
